@@ -390,11 +390,19 @@ function GameView({
   const [seconds, setSeconds] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const currentRowRef = useRef<HTMLDivElement | null>(null);
 
   const current = chain[chain.length - 1];
   const target = puzzle.target;
   const moves = chain.length - 1;
   const won = current === target;
+
+  // keep the active row in view as the chain grows
+  useEffect(() => {
+    const el = currentRowRef.current;
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [chain.length]);
 
   useEffect(() => {
     if (won) {
@@ -495,7 +503,7 @@ function GameView({
         </div>
       </div>
 
-      <div style={{ flex: 1, overflow: "auto", padding: "8px 20px 20px",
+      <div ref={scrollAreaRef} style={{ flex: 1, minHeight: 0, overflow: "auto", padding: "8px 20px 20px",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }}>
         <div style={{ fontSize: 9, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 8 }}>
           Start
@@ -515,6 +523,7 @@ function GameView({
 
         {visiblePrev.length > 0 && <div className="conn" style={{ height: 18 }} />}
 
+        <div ref={currentRowRef} style={{ scrollMarginBottom: 24 }}>
         <WordRow word={current}
           prevWord={visiblePrev[visiblePrev.length - 1] ?? null}
           kind={won ? "win" : "current"}
@@ -522,6 +531,7 @@ function GameView({
           editing={editingIdx ?? -1}
           onTapLetter={won ? undefined : handleTapLetter}
           shaking={shake} />
+        </div>
 
         {hintIdx >= 0 && !won && (
           <div style={{ display: "flex", gap: 8, marginTop: 6, justifyContent: "center" }}>
@@ -543,7 +553,7 @@ function GameView({
         <WordRow word={target} prevWord={null} kind="target" size={38} gap={6} />
       </div>
 
-      <div style={{ borderTop: "1px solid var(--line)", paddingTop: 8 }}>
+      <div style={{ borderTop: "1px solid var(--line)", paddingTop: 8, flexShrink: 0 }}>
         <Keyboard onKey={handleKey} onBack={onBack} onUndo={undo} disabled={won} />
       </div>
     </motion.div>
