@@ -485,7 +485,7 @@ function GameView({
     <motion.div key="game" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
       style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px 8px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px 8px", flexShrink: 0 }}>
         <div onClick={onAbort} style={{ cursor: "pointer", padding: 8, color: "var(--fg-2)", fontSize: 18, lineHeight: 1 }}>‹</div>
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
           <Stat label="moves" value={moves} accent={moves <= puzzle.par ? "var(--success)" : "var(--accent)"} />
@@ -496,16 +496,20 @@ function GameView({
           style={{ cursor: "pointer", padding: 8, color: showHint ? "var(--gold)" : "var(--fg-3)", fontSize: 14 }}>?</div>
       </div>
 
-      <div style={{ textAlign: "center", padding: "6px 20px 14px" }}>
+      <div style={{ textAlign: "center", padding: "6px 20px 10px", flexShrink: 0 }}>
         <div style={{ fontSize: 10, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase" }}>
           {mode === "daily" ? `Daily № ${getDayNumber()}` : mode === "ai" ? "AI Generated" : "Practice"} ·{" "}
           <span style={{ color: "var(--gold)" }}>{puzzle.theme}</span>
         </div>
+        <div style={{ marginTop: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+          <span style={{ fontSize: 9, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase" }}>Goal</span>
+          <WordRow word={target} prevWord={null} kind="target" size={28} gap={4} />
+        </div>
       </div>
 
-      <div ref={scrollAreaRef} style={{ flex: 1, minHeight: 0, overflow: "auto", padding: "8px 20px 20px",
+      <div ref={scrollAreaRef} style={{ flex: 1, minHeight: 0, overflow: "auto", padding: "8px 20px 16px",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }}>
-        <div style={{ fontSize: 9, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 8 }}>
+        <div style={{ fontSize: 9, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 8, flexShrink: 0 }}>
           Start
         </div>
 
@@ -513,7 +517,7 @@ function GameView({
           {visiblePrev.map((w, i) => {
             const prev = i === 0 ? null : visiblePrev[i - 1];
             return (
-              <div key={`${i}-${w}`} style={{ marginBottom: 6 }}>
+              <div key={`${i}-${w}`} style={{ marginBottom: 6, flexShrink: 0 }}>
                 <WordRow word={w} prevWord={prev} kind="dim" size={32} gap={5} />
                 {i < visiblePrev.length - 1 && <div className="conn" />}
               </div>
@@ -521,20 +525,20 @@ function GameView({
           })}
         </AnimatePresence>
 
-        {visiblePrev.length > 0 && <div className="conn" style={{ height: 18 }} />}
+        {visiblePrev.length > 0 && <div className="conn" style={{ height: 18, flexShrink: 0 }} />}
 
-        <div ref={currentRowRef} style={{ scrollMarginBottom: 24 }}>
-        <WordRow word={current}
-          prevWord={visiblePrev[visiblePrev.length - 1] ?? null}
-          kind={won ? "win" : "current"}
-          size={62} gap={8}
-          editing={editingIdx ?? -1}
-          onTapLetter={won ? undefined : handleTapLetter}
-          shaking={shake} />
+        <div ref={currentRowRef} style={{ scrollMarginBottom: 24, flexShrink: 0 }}>
+          <WordRow word={current}
+            prevWord={visiblePrev[visiblePrev.length - 1] ?? null}
+            kind={won ? "win" : "current"}
+            size={62} gap={8}
+            editing={editingIdx ?? -1}
+            onTapLetter={won ? undefined : handleTapLetter}
+            shaking={shake} />
         </div>
 
         {hintIdx >= 0 && !won && (
-          <div style={{ display: "flex", gap: 8, marginTop: 6, justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: 8, marginTop: 6, justifyContent: "center", flexShrink: 0 }}>
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} style={{ width: 62, display: "flex", justifyContent: "center" }}>
                 {i === hintIdx ? (
@@ -544,13 +548,6 @@ function GameView({
             ))}
           </div>
         )}
-
-        <div style={{ height: 24 }} />
-
-        <div style={{ fontSize: 9, color: "var(--fg-3)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 8 }}>
-          Goal
-        </div>
-        <WordRow word={target} prevWord={null} kind="target" size={38} gap={6} />
       </div>
 
       <div style={{ borderTop: "1px solid var(--line)", paddingTop: 8, flexShrink: 0 }}>
