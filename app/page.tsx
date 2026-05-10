@@ -132,7 +132,7 @@ function LetterTile({
       transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
       className={`tile ${kind} ${editing ? "editing" : ""}`}
-      style={{ width: size, height: size, fontSize, cursor: onClick ? "pointer" : "default" }}
+      style={{ width: size, height: size, fontSize, cursor: onClick ? "pointer" : "default", touchAction: "manipulation" }}
     >
       {editing && !char ? <span className="cursor" style={{ color: "var(--accent)" }}>|</span> : char}
     </motion.div>
