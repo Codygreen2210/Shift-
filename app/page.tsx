@@ -190,25 +190,25 @@ function Keyboard({
 }) {
   const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "0 6px 12px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 5, padding: "6px 6px calc(8px + env(safe-area-inset-bottom, 0px))" }}>
       {rows.map((r, ri) => (
         <div key={ri} style={{ display: "flex", gap: 4, justifyContent: "center" }}>
           {ri === 2 && (
             <div className="key wide" onClick={disabled ? undefined : onUndo}
-              style={{ flex: "1.4 0 0", height: 44, opacity: disabled ? 0.4 : 1 }}>
+              style={{ flex: "1.4 0 0", height: 42, opacity: disabled ? 0.4 : 1, touchAction: "manipulation" }}>
               UNDO
             </div>
           )}
           {r.split("").map(k => (
             <div key={k} className="key"
               onClick={disabled ? undefined : () => onKey(k)}
-              style={{ flex: "1 0 0", height: 44, fontSize: 16, opacity: disabled ? 0.4 : 1 }}>
+              style={{ flex: "1 0 0", height: 42, fontSize: 16, opacity: disabled ? 0.4 : 1, touchAction: "manipulation" }}>
               {k}
             </div>
           ))}
           {ri === 2 && (
             <div className="key wide" onClick={disabled ? undefined : onBack}
-              style={{ flex: "1.4 0 0", height: 44, opacity: disabled ? 0.4 : 1 }}>
+              style={{ flex: "1.4 0 0", height: 42, opacity: disabled ? 0.4 : 1, touchAction: "manipulation" }}>
               ⌫
             </div>
           )}
@@ -484,7 +484,15 @@ function GameView({
   return (
     <motion.div key="game" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative" }}>
+      style={{
+        flex: 1,
+        display: "grid",
+        gridTemplateRows: "auto auto 1fr auto",
+        position: "relative",
+        height: "100%",
+        minHeight: 0,
+        overflow: "hidden",
+      }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px 8px", flexShrink: 0 }}>
         <div onClick={onAbort} style={{ cursor: "pointer", padding: 8, color: "var(--fg-2)", fontSize: 18, lineHeight: 1 }}>‹</div>
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
